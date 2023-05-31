@@ -2,6 +2,8 @@
 
 Grab meeting notes from HackMD, and create a pull request on a project archive.
 
+This requires the [`gh` cli tool](https://github.com/cli/cli#installation).
+
 ## Example usage
 
 ```
