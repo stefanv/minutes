@@ -41,7 +41,7 @@ def bprint(msg):
     print(f"{ANSI_BOLD}{ANSI_YELLOW}{msg}{ANSI_CLEAR}")
 
 
-hackmd_id_match = re.match('https://hackmd.io/([a-zA-Z0-9]+)/?$', url)
+hackmd_id_match = re.match('https://hackmd.io/([a-zA-Z0-9-]+)/?$', url)
 if hackmd_id_match is None:
     print(f'Invalid HackMD URL: {url}')
     sys.exit(-1)
