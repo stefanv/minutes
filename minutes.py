@@ -1,4 +1,5 @@
 import requests
+import readline
 import argparse
 import re
 import sys
@@ -56,8 +57,17 @@ hackmd_id, = hackmd_id_match.groups(1)
 download_url = f'https://hackmd.io/{hackmd_id}/download'
 r = requests.get(download_url)
 meeting_notes = r.content
+print("some content was downloaded starting with\n")
+print(r.content[:13])
 
-date = datetime.today().strftime('%Y-%m-%d')
+meeting_name = datetime.today().strftime('%Y-%m-%d')
+
+readline.set_startup_hook(lambda: readline.insert_text(meeting_name))
+try:
+    meeting_name = input("Enter meeting name : ")
+finally:
+  readline.set_startup_hook()
+print("meeting name set to:", meeting_name)
 
 cwd = '__minutes_cache'
 os.makedirs(cwd, exist_ok=True)
@@ -81,7 +91,7 @@ run([
     'git', 'pull', 'origin', 'main'
 ])
 
-branch = f'minutes_{date}'
+branch = f'minutes_{meeting_name}'
 bprint(f'Creating `{branch}` branch')
 
 p = run([
@@ -100,7 +110,8 @@ run([
 if path.startswith('/'):
     path = path.lstrip('/')
 
-fn = os.path.relpath(os.path.join(path, f'{date}.md'))
+fn = os.path.relpath(os.path.join(path, f'{meeting_name}.md'))
+print('writing to: ', fn)
 with open(fn, 'wb') as f:
     f.write(meeting_notes)
 
@@ -109,7 +120,7 @@ run([
 ])
 
 run([
-    'git', 'commit', '-m', f'Add {date} meeting notes'
+    'git', 'commit', '-m', f'Add {meeting_name} meeting notes'
 ])
 
 p = run([
